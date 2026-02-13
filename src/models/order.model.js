@@ -1,39 +1,45 @@
 import mongoose, { Schema } from "mongoose";
 
-const orderSchema = new Schema({
-    products: [
-        {
-            product: {
-                typeof: Schema.Types.ObjectId(),
-                ref: "Product",
-            },
-            quantity: {
-                typeof: Number,
-                default: 0,
-            },
-            total: {
-                typeof: Number,
-                default: 0,
-            }
+const orderSchema = new Schema(
+  {
+    items: [
+      {
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
         },
+        quantity: {
+          type: Number,
+          required: true,
+          default: 1,
+          min: 1,
+        },
+        price: {
+          type: Number,
+          required: true,
+        },
+      },
     ],
-    owner: {
-        typeof: Schema.Types.ObjectId(),
-        ref: "User",
+    owner:{
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     orderTotal: {
-        typeof: Number,
-        require: true,
+      type: Number,
+      required: true,
     },
     address: {
-        typeof: Schema.Types.ObjectId(),
-        ref: "Address",
+      type: Schema.Types.ObjectId,
+      ref: "Address",
     },
     status: {
-        typeof: String,
-        enum: ["Pending", "Completed", "Cancelled"],
-        default: "Pending"
-    }
-}, { timestamps: true });
+      type: String,
+      enum: ["Pending", "Completed", "Cancelled"],
+      default: "Pending",
+    },
+  },
+  { timestamps: true }
+);
 
 export const Order = mongoose.model("Order", orderSchema);
