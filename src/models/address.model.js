@@ -1,29 +1,44 @@
 import mongoose, { Schema } from "mongoose";
 
 const addressSchema = new Schema({
-    pinCode: {
-        typeof: String,
-        require: true,
-    },
-    house: {
-        typeof: String,
-        require: true,
-    },
-    city: {
-        typeof: String,
-        require: true,
-    },
-    state: {
-        typeof: String,
-    },
-    country: {
-        typeof: String,
-        require: true
-    },
-    owner: {
-        typeof: Schema.Types.ObjectId(),
-        ref: "User",
-    },
+  country: {
+    type: String,
+    required: true,
+    default: "India",
+  },
+  fullName: {
+    type: String,
+    required: true,
+  },
+  mobile: {
+    type: Number,
+    required: true,
+  },
+  addressLine1: {
+    type: String,
+    required: true,
+  },
+  area: {
+    type: "String",
+  },
+  landmark: {
+    type: "String",
+  },
+  pincode: {
+    type: String,
+    required: true,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  state: {
+    type: String,
+  },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 export const Address = mongoose.model("Address", addressSchema);
