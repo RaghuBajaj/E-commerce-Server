@@ -11,10 +11,10 @@ import {
 const router = Router();
 
 router.route("/create").post(createProduct);
-router.route("/getById/:id").post(getProductById);
-router.route("/getByName").post(getProductByName);
-router.route("/getByCategory").post(getProductByCategory);
+router.route("/getById/:id").get(getProductById);
+router.route("/getByName").get(getProductByName);
+router.route("/getByCategory").get(getProductByCategory);
 router.route("/addReview").post(addProductReview);
-router.route("/delete").post(deleteProduct);
+router.route("/delete").delete(deleteProduct);
 
 export default router;

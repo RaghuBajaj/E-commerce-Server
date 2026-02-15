@@ -9,10 +9,10 @@ import {
 
 const router = Router();
 
-router.route("/addToCart").post(addToCart);
+router.route("/add").post(addToCart);
 router.route("/get").get(getCart);
 router.route("/clear").post(clearCart);
-router.route("/updateItem").post(updateCartItem);
-router.route("/removeItem").post(removeFromCart);
+router.route("/update_item").post(updateCartItem);
+router.route("/remove_item").post(removeFromCart);
 
 export default router;

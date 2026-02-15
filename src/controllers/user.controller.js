@@ -41,9 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required!");
   }
 
-  const isExist = await User.findOne({
-    $and: [{ fullName }, { mobile }],
-  });
+  const isExist = await User.findOne({ mobile });
 
   if (isExist) {
     throw new ApiError(409, "User already exist!");
@@ -61,13 +59,16 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const { accessToken, refreshToken } = await generateTokens(user._id);
 
-  const createUser = await User.findOne(user._id).select(
+  const createdUser = await User.findOne(user._id).select(
     "-refreshToken -password"
   );
 
-  if (!createUser) {
+  if (!createdUser) {
     throw new ApiError(500, "Erroe occured while creating new user!");
   }
+
+  createdUser['refreshToken'] = refreshToken;
+  await createdUser.save();
 
   return res
     .status(200)
@@ -77,7 +78,7 @@ const registerUser = asyncHandler(async (req, res) => {
       new ApiResponse(
         200,
         {
-          user: createUser,
+          user: createdUser,
           accessToken,
           refreshToken,
         },
@@ -116,6 +117,9 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const { accessToken, refreshToken } = await generateTokens(user._id);
+
+  user.refreshToken = refreshToken;
+  await user.save();
 
   const loggedInUser = await User.findOne(user._id).select(
     "-password -refreshToken"
@@ -247,7 +251,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 });
 
 const updateUserPassword = asyncHandler(async (req, res) => {
-  const { oldPassword, newPassword } = req.boday;
+  const { oldPassword, newPassword } = req.body;
 
   const user = await User.findById(req.user?._id);
 

@@ -5,14 +5,14 @@ import {
   getAllUserOrders,
   getOrderById,
   updateOrderStatus,
-} from "../controllers/order.controller";
+} from "../controllers/order.controller.js";
 
 const router = Router();
 
 router.route("/create").post(createOrder);
-router.route("/getById").get(getOrderById);
-router.route("/getAllUserOrders").get(getAllUserOrders);
-router.route("/updateStatus").post(updateOrderStatus);
+router.route("/get").get(getOrderById);
+router.route("/get_all_user_orders").get(getAllUserOrders);
+router.route("/update_status").post(updateOrderStatus);
 router.route("/cancel").post(cancelOrder);
 
 export default router;

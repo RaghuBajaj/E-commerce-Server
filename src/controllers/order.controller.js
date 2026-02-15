@@ -12,7 +12,7 @@ const createOrder = asyncHandler(async (req, res) => {
   // create order object with info from cart, userId, addressId
   // save order in db
   // send order id in response
-  const deliveryAddress = req.body;
+  const addressId = req.body;
   const userId = req.user._id;
 
   const cart = await Cart.find({ owner: userId });
@@ -26,7 +26,7 @@ const createOrder = asyncHandler(async (req, res) => {
     owner: userId,
     orderTotal: cart.finalTotal,
     status: "Pending",
-    address: deliveryAddress,
+    address: addressId,
   };
 
   const order = await Order.create(newOrder);
@@ -35,18 +35,21 @@ const createOrder = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Some error occured while creating order!");
   }
 
+  cart.items = [];
+  await cart.save();
+
   const user = await User.findById(userId);
 
   if (!user) {
     throw new ApiError(404, "User not found!");
   }
 
-  if (user.orders) {
-    await user.orders.push(newOrder);
-  } else {
+  if (!user.orders) {
     user["orders"] = [];
-    user.orders.push(newOrder);
-  }
+  } 
+
+  user.orders.push(newOrder);
+  await user.save();
 
   return res
     .status(200)
